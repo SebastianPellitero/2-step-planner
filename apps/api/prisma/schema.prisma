@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  places Place[]
+  trips  Trip[]
+
+  @@map("users")
+}
+
+enum PlaceType {
+  RESTAURANT
+  MUSEUM
+  HIKE
+  HOTEL
+  NATURE
+  TEMPLE
+  BEACH
+  MARKET
+  BAR
+  SHOP
+  OTHER
+}
+
+model Place {
+  id          String    @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  lat         Float
+  lng         Float
+  address     String?
+  type        PlaceType
+  notes       String?
+  visited     Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trips PlaceTrip[]
+
+  @@map("places")
+}
+
+model Trip {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user   User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  places PlaceTrip[]
+
+  @@map("trips")
+}
+
+model PlaceTrip {
+  placeId    String
+  tripId     String
+  orderIndex Int    @default(0)
+
+  place Place @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  trip  Trip  @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@id([placeId, tripId])
+  @@map("place_trips")
+}

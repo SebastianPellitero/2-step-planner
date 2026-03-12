@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Holiday Planner",
+    "slug": "holiday-planner",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.holidayplanner.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We use your location to show nearby places from your list.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "We use your location to show nearby places from your list."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.holidayplanner.app",
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "We use your location to show nearby places from your list."
+        }
+      ]
+    ],
+    "scheme": "holidayplanner",
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
