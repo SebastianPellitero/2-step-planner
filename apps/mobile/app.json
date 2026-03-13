@@ -25,7 +25,10 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.holidayplanner.app",
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "plugins": [
       [
@@ -33,7 +36,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "We use your location to show nearby places from your list."
         }
-      ]
+      ],
+      "expo-router"
     ],
     "scheme": "holidayplanner",
     "web": {
