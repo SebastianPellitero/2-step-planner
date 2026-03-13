@@ -1,5 +1,7 @@
 # 2-Step Planner ✈️
 
+![Status](https://img.shields.io/badge/status-WIP-yellow)
+
 A cross-platform holiday planner that helps you organize the places you want to visit 
 and track them in real time while you travel.
 
