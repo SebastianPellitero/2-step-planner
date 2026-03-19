@@ -31,9 +31,16 @@ export const LoginSchema = z.object({
 export const CreatePlaceSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
-  lat: z.number(),
-  lng: z.number(),
+  // Rich location fields (from the location provider)
   address: z.string().optional(),
+  city: z.string().optional(),
+  country: z.string().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  locationPlaceId: z.string().optional(),
+  // Legacy coords — default to 0 when using the location provider
+  lat: z.number().default(0),
+  lng: z.number().default(0),
   type: PlaceTypeEnum,
   notes: z.string().optional(),
 })

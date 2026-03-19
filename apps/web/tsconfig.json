@@ -6,6 +6,7 @@
         "./src/*"
       ]
     },
+    "types": ["node", "react", "react-dom"],
     "noEmit": true,
     "isolatedModules": true
   },

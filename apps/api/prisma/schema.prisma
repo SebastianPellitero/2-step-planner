@@ -35,18 +35,25 @@ enum PlaceType {
 }
 
 model Place {
-  id          String    @id @default(cuid())
-  userId      String
-  name        String
-  description String?
-  lat         Float
-  lng         Float
-  address     String?
-  type        PlaceType
-  notes       String?
-  visited     Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id              String    @id @default(cuid())
+  userId          String
+  name            String
+  description     String?
+  // Rich location fields from the search provider
+  address         String?
+  city            String?
+  country         String?
+  latitude        Float?
+  longitude       Float?
+  locationPlaceId String?   // Provider-specific ID (e.g. Mapbox feature ID)
+  // Legacy coords kept for backwards compat — prefer latitude/longitude
+  lat             Float     @default(0)
+  lng             Float     @default(0)
+  type            PlaceType
+  notes           String?
+  visited         Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   trips PlaceTrip[]

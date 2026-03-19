@@ -36,9 +36,18 @@ export interface Place {
   userId: string
   name: string
   description?: string | null
-  lat: number
-  lng: number
+  // Location fields — populated by the location provider
   address?: string | null
+  city?: string | null
+  country?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  /** Provider-specific place ID (e.g. Mapbox feature ID) */
+  locationPlaceId?: string | null
+  /** @deprecated use latitude/longitude */
+  lat: number
+  /** @deprecated use latitude/longitude */
+  lng: number
   type: PlaceType
   notes?: string | null
   visited: boolean
