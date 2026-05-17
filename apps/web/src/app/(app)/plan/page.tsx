@@ -38,7 +38,11 @@ export default function PlanPage() {
 
   const deleteTrip = useMutation({
     mutationFn: (id: string) => apiClient.deleteTrip(id),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['trips'] }); setDeleting(null) },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['trips'] })
+      queryClient.invalidateQueries({ queryKey: ['places'] })
+      setDeleting(null)
+    },
   })
 
   const importTrip = useMutation({

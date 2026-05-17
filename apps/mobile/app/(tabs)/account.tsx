@@ -2,6 +2,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useAuthStore } from '../../store/auth'
 
+function formatMemberSince(createdAt: string) {
+  const date = new Date(createdAt)
+  return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+}
+
 export default function AccountScreen() {
   const { user, logout } = useAuthStore()
   const router = useRouter()
@@ -23,6 +28,9 @@ export default function AccountScreen() {
           <Text style={s.avatarText}>{initial}</Text>
         </View>
         <Text style={s.email}>{user.email}</Text>
+        {user.createdAt && (
+          <Text style={s.memberSince}>Member since {formatMemberSince(user.createdAt)}</Text>
+        )}
       </View>
 
       <TouchableOpacity style={s.logoutBtn} onPress={handleLogout} activeOpacity={0.8}>
@@ -69,6 +77,11 @@ const s = StyleSheet.create({
     fontSize: 15,
     color: '#374151',
     fontWeight: '500',
+  },
+  memberSince: {
+    fontSize: 13,
+    color: '#9ca3af',
+    fontWeight: '400',
   },
   logoutBtn: {
     backgroundColor: '#fff',

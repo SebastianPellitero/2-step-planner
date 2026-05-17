@@ -38,6 +38,8 @@ export function AddToTripModal({ places, listTitle, onClose }: Props) {
           type: p.type,
           lat: p.lat ?? 0,
           lng: p.lng ?? 0,
+          latitude: p.lat ?? 0,
+          longitude: p.lng ?? 0,
           address: p.address ?? undefined,
           notes: p.notes ?? undefined,
           description: p.description ?? undefined,

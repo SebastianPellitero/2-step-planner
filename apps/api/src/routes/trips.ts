@@ -126,7 +126,20 @@ tripsRouter.delete('/:id', async (req: Request, res) => {
   const trip = await prisma.trip.findFirst({ where: { id: req.params.id, userId } })
   if (!trip) return res.status(404).json({ error: 'Trip not found' })
 
-  await prisma.trip.delete({ where: { id: req.params.id } })
+  // Delete places that belong exclusively to this trip (not shared with others)
+  const placesInTrip = await prisma.place.findMany({
+    where: { userId, trips: { some: { tripId: req.params.id } } },
+    include: { trips: { select: { tripId: true } } },
+  })
+  const exclusivePlaceIds = placesInTrip
+    .filter((p) => p.trips.length === 1)
+    .map((p) => p.id)
+
+  await prisma.$transaction([
+    prisma.place.deleteMany({ where: { id: { in: exclusivePlaceIds } } }),
+    prisma.trip.delete({ where: { id: req.params.id } }),
+  ])
+
   return res.status(204).send()
 })
 

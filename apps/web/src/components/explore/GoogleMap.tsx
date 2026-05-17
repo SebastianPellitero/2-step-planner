@@ -43,7 +43,9 @@ export function GoogleMap({ places, selectedId, onSelectPlace, onNearbyChange, o
   useEffect(() => { onPermissionDeniedRef.current = onPermissionDenied }, [onPermissionDenied])
   useEffect(() => { onNearbyChangeRef.current = onNearbyChange }, [onNearbyChange])
 
-  const mappablePlaces = places.filter((p) => p.latitude != null && p.longitude != null)
+  const mappablePlaces = places
+    .map((p) => ({ ...p, latitude: p.latitude ?? p.lat, longitude: p.longitude ?? p.lng }))
+    .filter((p) => p.latitude !== 0 || p.longitude !== 0)
 
   useEffect(() => {
     if (!navigator.geolocation) return

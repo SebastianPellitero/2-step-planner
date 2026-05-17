@@ -25,7 +25,7 @@ const CATEGORY: Record<string, CategoryStyle> = {
 const FALLBACK: CategoryStyle = { emoji: '📍', color: '#6b7280' }
 
 const BASE_SIZE = 36
-const MIN_SCALE = 0.4
+const MIN_SCALE = 0.05
 
 interface Props {
   place: Place
