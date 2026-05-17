@@ -1,0 +1,11 @@
+{
+  "$schema": "https://railway.app/railway-schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "npm install && npm run db:generate --workspace=@holiday-planner/api && npm run build --workspace=@holiday-planner/shared && npm run build --workspace=@holiday-planner/api"
+  },
+  "deploy": {
+    "startCommand": "cd apps/api && npx prisma migrate deploy && node dist/index.js",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}
