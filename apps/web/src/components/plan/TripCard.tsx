@@ -9,9 +9,10 @@ interface Props {
   trip: Trip
   onEdit: (trip: Trip) => void
   onDelete: (trip: Trip) => void
+  onExport: (trip: Trip) => void
 }
 
-export function TripCard({ trip, onEdit, onDelete }: Props) {
+export function TripCard({ trip, onEdit, onDelete, onExport }: Props) {
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -50,6 +51,9 @@ export function TripCard({ trip, onEdit, onDelete }: Props) {
           <div style={s.menu}>
             <button style={s.menuItem} onClick={() => { setMenuOpen(false); onEdit(trip) }}>
               ✏️ Edit
+            </button>
+            <button style={s.menuItem} onClick={() => { setMenuOpen(false); onExport(trip) }}>
+              📤 Export
             </button>
             <button style={{ ...s.menuItem, color: '#ef4444' }} onClick={() => { setMenuOpen(false); onDelete(trip) }}>
               🗑️ Delete

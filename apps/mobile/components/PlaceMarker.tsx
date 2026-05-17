@@ -85,10 +85,13 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 4,
+    maxHeight: 30,
+    maxWidth: 30,
+
   },
   pin: {
     width: 0,

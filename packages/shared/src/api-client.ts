@@ -155,4 +155,11 @@ export class ApiClient {
       body: JSON.stringify(input),
     })
   }
+
+  importTrip(input: ExportSchema) {
+    return this.request<Trip>('/trips/import', {
+      method: 'POST',
+      body: JSON.stringify(input),
+    })
+  }
 }

@@ -37,6 +37,11 @@ export function GoogleMap({ places, selectedId, onSelectPlace, onNearbyChange, o
 
   const mapRef = useRef<google.maps.Map | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
+  const onPermissionDeniedRef = useRef(onPermissionDenied)
+  const onNearbyChangeRef = useRef(onNearbyChange)
+
+  useEffect(() => { onPermissionDeniedRef.current = onPermissionDenied }, [onPermissionDenied])
+  useEffect(() => { onNearbyChangeRef.current = onNearbyChange }, [onNearbyChange])
 
   const mappablePlaces = places.filter((p) => p.latitude != null && p.longitude != null)
 
@@ -53,11 +58,11 @@ export function GoogleMap({ places, selectedId, onSelectPlace, onNearbyChange, o
           return loc
         })
       },
-      () => onPermissionDenied(),
+      () => onPermissionDeniedRef.current(),
       { enableHighAccuracy: false, timeout: 10000 }
     )
     return () => navigator.geolocation.clearWatch(watchId)
-  }, [onPermissionDenied])
+  }, [])
 
   useEffect(() => {
     if (!userLocation) return
@@ -65,8 +70,8 @@ export function GoogleMap({ places, selectedId, onSelectPlace, onNearbyChange, o
       .map((p) => ({ ...p, distanceKm: distanceKm(userLocation.lat, userLocation.lng, p.latitude!, p.longitude!) }))
       .filter((p) => p.distanceKm <= NEARBY_RADIUS_KM)
       .sort((a, b) => a.distanceKm - b.distanceKm)
-    onNearbyChange(nearby)
-  }, [userLocation, places]) // eslint-disable-line react-hooks/exhaustive-deps
+    onNearbyChangeRef.current(nearby)
+  }, [userLocation, places])
 
   const onLoad = useCallback((map: google.maps.Map) => {
     mapRef.current = map

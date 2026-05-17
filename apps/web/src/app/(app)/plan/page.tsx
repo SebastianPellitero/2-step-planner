@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import type { Trip } from '@holiday-planner/shared'
+import type { Trip, ExportSchema } from '@holiday-planner/shared'
 import { apiClient } from '@/lib/api'
+import { useAuthStore } from '@/store/auth'
 import { TripCard } from '@/components/plan/TripCard'
 import { NewTripModal } from '@/components/plan/NewTripModal'
 import { EditTripModal } from '@/components/plan/EditTripModal'
@@ -11,13 +12,17 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 
 export default function PlanPage() {
   const queryClient = useQueryClient()
+  const { token } = useAuthStore()
   const [showNew, setShowNew] = useState(false)
   const [editing, setEditing] = useState<Trip | null>(null)
   const [deleting, setDeleting] = useState<Trip | null>(null)
+  const [importError, setImportError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const { data: trips = [], isLoading } = useQuery({
     queryKey: ['trips'],
     queryFn: () => apiClient.getTrips(),
+    enabled: !!token,
   })
 
   const createTrip = useMutation({
@@ -36,6 +41,42 @@ export default function PlanPage() {
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['trips'] }); setDeleting(null) },
   })
 
+  const importTrip = useMutation({
+    mutationFn: (data: ExportSchema) => apiClient.importTrip(data),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['trips'] }); setImportError(null) },
+    onError: (err: Error) => setImportError(err.message),
+  })
+
+  function handleExport(trip: Trip) {
+    const places = (trip.places ?? []).map((pit) => {
+      const p = pit.place!
+      return { name: p.name, description: p.description, lat: p.lat, lng: p.lng, address: p.address, type: p.type, notes: p.notes, visited: p.visited }
+    })
+    const payload: ExportSchema = { version: '1.0', exportedAt: new Date().toISOString(), name: trip.name, places }
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${trip.name.replace(/\s+/g, '_')}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    e.target.value = ''
+    file.text().then((text) => {
+      let parsed: unknown
+      try { parsed = JSON.parse(text) } catch { setImportError('Invalid JSON file'); return }
+      if (!parsed || typeof parsed !== 'object' || (parsed as ExportSchema).version !== '1.0') {
+        setImportError('Not a valid trip export file')
+        return
+      }
+      importTrip.mutate(parsed as ExportSchema)
+    })
+  }
+
   return (
     <div style={s.page}>
       <div style={s.header}>
@@ -43,8 +84,20 @@ export default function PlanPage() {
           <h1 style={s.title}>Wishlist</h1>
           <p style={s.sub}>Places to go</p>
         </div>
-        <button style={s.newBtn} onClick={() => setShowNew(true)}>+ Trip</button>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <input type="file" accept=".json" ref={fileInputRef} onChange={handleImportFile} style={{ display: 'none' }} />
+          <button style={s.importBtn} onClick={() => fileInputRef.current?.click()} disabled={importTrip.isPending}>
+            {importTrip.isPending ? 'Importing…' : '⬆ Import'}
+          </button>
+          <button style={s.newBtn} onClick={() => setShowNew(true)}>+ Trip</button>
+        </div>
       </div>
+      {importError && (
+        <div style={s.importError}>
+          {importError}
+          <button onClick={() => setImportError(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', marginLeft: '0.5rem', color: 'inherit' }}>✕</button>
+        </div>
+      )}
 
       {isLoading ? (
         <div style={s.loading}>Loading…</div>
@@ -58,6 +111,7 @@ export default function PlanPage() {
               trip={trip}
               onEdit={setEditing}
               onDelete={setDeleting}
+              onExport={handleExport}
             />
           ))}
         </div>
@@ -106,4 +160,13 @@ const s: Record<string, React.CSSProperties> = {
   },
   loading: { color: 'var(--color-muted)', marginTop: '3rem', textAlign: 'center' },
   empty: { color: 'var(--color-muted)', marginTop: '3rem', textAlign: 'center', fontSize: '0.9rem' },
+  importBtn: {
+    background: 'transparent', color: 'var(--color-primary)', border: '1.5px solid var(--color-primary)',
+    borderRadius: '20px', padding: '0.5rem 1.25rem', fontWeight: 700,
+    fontSize: '0.875rem', cursor: 'pointer',
+  },
+  importError: {
+    display: 'flex', alignItems: 'center', color: '#ef4444',
+    fontSize: '0.8rem', marginBottom: '1rem',
+  },
 }

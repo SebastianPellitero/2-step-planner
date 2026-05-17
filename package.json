@@ -6,6 +6,7 @@
     "packages/*"
   ],
   "scripts": {
+    "start": "bash scripts/start.sh",
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",

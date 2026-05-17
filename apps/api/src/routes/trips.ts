@@ -7,6 +7,7 @@ import {
   UpdateTripSchema,
   AddPlaceToTripSchema,
   ReorderTripPlacesSchema,
+  ImportSchema,
 } from '@holiday-planner/shared'
 import type { Request } from 'express'
 
@@ -30,6 +31,48 @@ tripsRouter.get('/', async (req: Request, res) => {
   })
 
   return res.json({ data: trips })
+})
+
+// POST /trips/import — create a new trip from an exported JSON
+tripsRouter.post('/import', validate(ImportSchema), async (req: Request, res) => {
+  const { userId } = req as AuthRequest
+  const { name, places } = req.body
+
+  const trip = await prisma.trip.create({ data: { name, userId } })
+
+  try {
+    for (let i = 0; i < places.length; i++) {
+      const p = places[i]
+      const place = await prisma.place.create({
+        data: {
+          name: p.name,
+          type: p.type,
+          lat: p.lat ?? 0,
+          lng: p.lng ?? 0,
+          description: p.description ?? undefined,
+          address: p.address ?? undefined,
+          notes: p.notes ?? undefined,
+          visited: p.visited ?? false,
+          userId,
+        },
+      })
+      await prisma.placeTrip.create({
+        data: { placeId: place.id, tripId: trip.id, orderIndex: i },
+      })
+    }
+  } catch (err) {
+    await prisma.trip.delete({ where: { id: trip.id } }).catch(() => {})
+    return res.status(500).json({ error: 'Failed to import trip' })
+  }
+
+  const result = await prisma.trip.findFirst({
+    where: { id: trip.id },
+    include: {
+      places: { include: { place: true }, orderBy: { orderIndex: 'asc' } },
+    },
+  })
+
+  return res.status(201).json({ data: result })
 })
 
 // GET /trips/:id

@@ -6,7 +6,10 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@holiday-planner/shared": "*",
@@ -20,13 +23,19 @@
   },
   "devDependencies": {
     "@holiday-planner/config": "*",
+    "@playwright/test": "^1.59.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^20.0.0",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
+    "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.0",
-    "typescript": "^5.4.0"
+    "jsdom": "^29.0.2",
+    "typescript": "^5.4.0",
+    "vitest": "^4.1.4"
   }
 }

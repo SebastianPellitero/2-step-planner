@@ -7,6 +7,7 @@ import { UserArea } from '@/components/sidebar/UserArea'
 const links = [
   { href: '/plan',                label: 'Plan',       icon: '📋' },
   { href: '/explore',             label: 'Explore',    icon: '🗺️' },
+  { href: '/discover',            label: 'Discover',   icon: '🌍' },
   { href: '/settings/categories', label: 'Categories', icon: '🏷️' },
 ]
 

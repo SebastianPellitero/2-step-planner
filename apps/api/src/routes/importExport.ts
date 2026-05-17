@@ -4,6 +4,7 @@ import { requireAuth, type AuthRequest } from '../middleware/auth'
 import { validate } from '../middleware/validate'
 import { ImportSchema } from '@holiday-planner/shared'
 import type { Request } from 'express'
+import type { Place } from '@prisma/client'
 
 export const importExportRouter = Router()
 
@@ -22,7 +23,7 @@ importExportRouter.get('/export', async (req: Request, res) => {
     version: '1.0',
     exportedAt: new Date().toISOString(),
     name: 'My Holiday Places',
-    places: places.map(({ id: _id, userId: _uid, createdAt: _ca, updatedAt: _ua, ...rest }) => rest),
+    places: places.map(({ id: _id, userId: _uid, createdAt: _ca, updatedAt: _ua, ...rest }: Place) => rest),
   }
 
   return res.json({ data: payload })
