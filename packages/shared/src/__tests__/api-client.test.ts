@@ -100,7 +100,7 @@ describe('ApiClient — places', () => {
     const place = { id: 'p1', name: 'Den', type: 'RESTAURANT', lat: 0, lng: 0, visited: false, userId: 'u1', createdAt: '', updatedAt: '' }
     const spy = mockFetch({ data: place }, 201)
     const client = makeClient()
-    const result = await client.createPlace({ name: 'Den', type: 'RESTAURANT' })
+    const result = await client.createPlace({ name: 'Den', type: 'RESTAURANT', lat: 0, lng: 0 })
     expect(result.name).toBe('Den')
     expect(spy.mock.calls[0][1]?.method).toBe('POST')
   })

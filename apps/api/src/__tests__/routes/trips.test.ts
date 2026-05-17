@@ -29,18 +29,18 @@ vi.mock('../../lib/prisma', () => ({
 import { app } from '../../app'
 import { prisma } from '../../lib/prisma'
 
-const mockTrip = prisma.trip as {
+const mockTrip = prisma.trip as unknown as {
   findMany: ReturnType<typeof vi.fn>
   findFirst: ReturnType<typeof vi.fn>
   create: ReturnType<typeof vi.fn>
   update: ReturnType<typeof vi.fn>
   delete: ReturnType<typeof vi.fn>
 }
-const mockPlace = prisma.place as {
+const mockPlace = prisma.place as unknown as {
   findFirst: ReturnType<typeof vi.fn>
   create: ReturnType<typeof vi.fn>
 }
-const mockPlaceTrip = prisma.placeTrip as {
+const mockPlaceTrip = prisma.placeTrip as unknown as {
   findUnique: ReturnType<typeof vi.fn>
   create: ReturnType<typeof vi.fn>
   count: ReturnType<typeof vi.fn>

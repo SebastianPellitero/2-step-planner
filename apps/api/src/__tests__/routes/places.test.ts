@@ -17,7 +17,7 @@ vi.mock('../../lib/prisma', () => ({
 import { app } from '../../app'
 import { prisma } from '../../lib/prisma'
 
-const mockPlace = prisma.place as {
+const mockPlace = prisma.place as unknown as {
   findMany: ReturnType<typeof vi.fn>
   findFirst: ReturnType<typeof vi.fn>
   create: ReturnType<typeof vi.fn>

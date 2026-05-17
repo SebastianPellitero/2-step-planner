@@ -14,7 +14,7 @@ vi.mock('../../lib/prisma', () => ({
 import { app } from '../../app'
 import { prisma } from '../../lib/prisma'
 
-const mockUser = prisma.user as {
+const mockUser = prisma.user as unknown as {
   findUnique: ReturnType<typeof vi.fn>
   create: ReturnType<typeof vi.fn>
 }

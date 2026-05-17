@@ -17,7 +17,7 @@ placesRouter.get('/', async (req: Request, res) => {
   const places = await prisma.place.findMany({
     where: {
       userId,
-      ...(type ? { type: type as string } : {}),
+      ...(type ? { type: type as import('@prisma/client').PlaceType } : {}),
       ...(visited !== undefined ? { visited: visited === 'true' } : {}),
       ...(tripId ? { trips: { some: { tripId: tripId as string } } } : {}),
     },
