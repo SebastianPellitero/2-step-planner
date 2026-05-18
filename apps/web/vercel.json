@@ -1,0 +1,4 @@
+{
+  "installCommand": "cd ../.. && npm install --ignore-scripts --workspace=@holiday-planner/shared --workspace=@holiday-planner/config --workspace=@holiday-planner/web --legacy-peer-deps",
+  "buildCommand": "cd ../.. && npm run build --workspace=@holiday-planner/shared && npm run build --workspace=@holiday-planner/web"
+}

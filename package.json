@@ -13,6 +13,10 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\""
   },
+  "dependencies": {
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
+  },
   "devDependencies": {
     "turbo": "^2.0.0",
     "typescript": "^5.4.0",
