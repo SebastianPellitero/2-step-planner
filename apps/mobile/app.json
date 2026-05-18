@@ -27,7 +27,9 @@
       "package": "com.holidayplanner.app",
       "permissions": [
         "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
+        "ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
       ]
     },
     "plugins": [
@@ -42,6 +44,12 @@
     "scheme": "holidayplanner",
     "web": {
       "bundler": "metro"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "db82eaa3-53a9-45bc-abbd-3f7ace5d2cff"
+      }
     }
   }
 }
